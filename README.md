@@ -8,6 +8,7 @@ In Makefile change PROJECT_NAME to whatever you want.
 
 ## Requirements
 system packages
+ - g++
  - qmake6
  - qml6-module-qtqml-workerscript
  - qml6-module-qtquick
@@ -46,6 +47,7 @@ TODO
 Install qt with wasm single threaded as target with the installer.
 Set QMAKEWASM variable in Makefile to the install location.
 Find out the version of emsdk to install by building for wasm.
+for qt 6.5 emsdk version 3.1.25 is required
 Install emsdk as followed.
 ```
 export EMSDK_BASE_LOCATION=~/packages
@@ -54,10 +56,10 @@ git clone https://github.com/emscripten-core/emsdk.git
 cd emsdk
 ./emsdk install 3.1.25
 ./emsdk activate 3.1.25
+echo 'export EMSDK_QUIET=1' >> $HOME/.bashrc
 echo 'source "$EMSDK_BASE_LOCATION/emsdk/emsdk_env.sh"' >> $HOME/.bashrc
 source "$EMSDK_BASE_LOCATION/emsdk/emsdk_env.sh"
 ```
-Try building for wasm with the Makefile to find out which version is required.
 
 ## Building
 Optionally supply a logo.svg for the splash screen.
@@ -70,6 +72,6 @@ Run `emrun build/wasm/PROJECT_NAME.html`.
 The complete application consists of the files PROJECT_NAME.html/js/wasm, qtloader.js and logo.svg in build/wasm folder.
 
 # TODOS
-A github action is desired to automate the building.
+A github action is desired to automate the setup and build process.
 	see https://github.com/marketplace/actions/install-qt for action to install qt.
 		this needs some work because it doesn't support building wasm which is one of the end goes of this project
