@@ -23,7 +23,8 @@ run `make native`
 The file build/native/PROJECT_NAME is the resulting binary.
 
 ## Packaging
-TODO
+run `make dist`
+this will create a debian package
 
 # Windows
 
