@@ -58,19 +58,14 @@ Find out the version of emsdk to install by building for wasm.
 for qt 6.5 emsdk version 3.1.25 is required
 Install emsdk as followed.
 ```
-export EMSDK_BASE_LOCATION=~/packages
-cd $EMSDK_BASE_LOCATION
+cd $PACKAGEDIR
 git clone https://github.com/emscripten-core/emsdk.git
 cd emsdk
 ./emsdk install 3.1.25
 ./emsdk activate 3.1.25
-echo 'export EMSDK_QUIET=1' >> $HOME/.bashrc
-echo 'source "$EMSDK_BASE_LOCATION/emsdk/emsdk_env.sh"' >> $HOME/.bashrc
-source "$EMSDK_BASE_LOCATION/emsdk/emsdk_env.sh"
 ```
 
 ## Building
-Optionally supply a logo.svg for the splash screen.
 Run `make wasm`.
 
 ## Running

@@ -1,6 +1,7 @@
 # linux variables
 QMAKENATIVE=qmake6
-QMAKEWASM=~/packages/Qt/6.5.0/wasm_singlethread/bin/qmake
+PACKAGEDIR=~/packages
+QMAKEWASM=$(PACKAGEDIR)/Qt/6.5.0/wasm_singlethread/bin/qmake
 ARCH=$(shell dpkg-architecture -q DEB_TARGET_ARCH)
 
 # project variables
@@ -37,15 +38,16 @@ build/wasm: Makefile
 	@echo 'QT += qml quick' >> build/wasm/$(PROJECT_NAME).pro
 	$(QMAKEWASM) build/wasm/$(PROJECT_NAME).pro -o build/wasm/Makefile
 
-.PHONY: native wasm
-native: build/native
+FORCE:
+build/native/$(PROJECT_NAME): FORCE build/native
 	$(MAKE) -C build/native
+
+.PHONY: native wasm
+native: build/native/$(PROJECT_NAME)
 wasm: build/wasm
 	$(MAKE) -C build/wasm
 	@if cp logo.svg build/wasm/logo.svg
 	@sed -i 's/qtlogo.svg/logo.svg/' build/wasm/qt6-skeleton.html
-
-build/native/$(PROJECT_NAME): | native
 
 dist/linux/$(PROJECT_NAME)_$(APPVERSION)_1_$(ARCH).deb: build/native/$(PROJECT_NAME) | Makefile
 	@echo building debian package
@@ -70,7 +72,7 @@ dist/linux/$(PROJECT_NAME)-$(APPVERSION)-$(APPIMAGEARCH).AppImage: export QML_SO
 dist/linux/$(PROJECT_NAME)-$(APPVERSION)-$(APPIMAGEARCH).AppImage: build/native/$(PROJECT_NAME) | Makefile
 	@mkdir -p dist/linux/AppDir/usr/share/applications/
 	@echo "[Desktop Entry]\nType=Application\nName=$(PROJECT_NAME)\nExec=$(PROJECT_NAME)\nIcon=logo\nCategories=$(CATEGORIES)" > dist/linux/AppDir/usr/share/applications/$(PROJECT_NAME).desktop
-	@~/packages/linuxdeploy-x86_64.AppImage --appdir dist/linux/AppDir -e build/native/$(PROJECT_NAME) -i logo.svg -d dist/linux/AppDir/usr/share/applications/$(PROJECT_NAME).desktop --plugin qt --output appimage
+	@$(PACKAGEDIR)/linuxdeploy-x86_64.AppImage --appdir dist/linux/AppDir -e build/native/$(PROJECT_NAME) -i logo.svg -d dist/linux/AppDir/usr/share/applications/$(PROJECT_NAME).desktop --plugin qt --output appimage
 	@mv $(PROJECT_NAME)-$(APPVERSION)-$(APPIMAGEARCH).AppImage dist/linux
 	@rm -rf dist/linux/AppDir
 
