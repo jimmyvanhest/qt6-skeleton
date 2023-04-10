@@ -2,12 +2,12 @@
 
 A skeleton project for Qt 6 which supports linux/windows/macos/android/ios/web
 
-In Makefile change PROJECT_NAME to whatever you want.
+In Makefile change project variables to whatever you want.
 
 # Linux
 
 ## Requirements
-system packages
+System packages
  - g++
  - qmake6
  - qml6-module-qtqml-workerscript
@@ -24,14 +24,14 @@ chmod +x linuxdeploy*.AppImage
 ```
 
 ## Building
-run `make native`
+Run `make native`
 
 ## Running
 The file build/native/PROJECT_NAME is the resulting binary.
 
 ## Packaging
-run `make dist`
-this will create a debian package
+Run `make dist`
+This will create a debian package and an AppImage in dist/linux
 
 # Windows
 
@@ -72,7 +72,8 @@ Run `make wasm`.
 Run `emrun build/wasm/PROJECT_NAME.html`.
 
 ## Deploying
-The complete application consists of the files PROJECT_NAME.html/js/wasm, qtloader.js and logo.svg in build/wasm folder.
+Run `make dist`
+This will put the required files to deploy in dist/wasm
 
 # TODOS
 A github action is desired to automate the setup and build process.
