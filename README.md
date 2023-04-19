@@ -6,76 +6,19 @@ In Makefile change project variables to whatever you want.
 
 # Linux
 
-## Requirements
-System packages
- - g++
- - qmake6
- - qml6-module-qtqml-workerscript
- - qml6-module-qtquick
- - qml6-module-qtquick-window
- - qt6-base-dev
- - qt6-declarative-dev
-
-```
-cd ~/packages
-wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-chmod +x linuxdeploy*.AppImage
-```
-
-## Building
-Run `make native`
-
-## Running
-The file build/native/PROJECT_NAME is the resulting binary.
-
-## Packaging
-Run `make dist`
-This will create a debian package and an AppImage in dist/linux
+Run `make dev-install` to configure dependencies
+Run `make linux` to build the linux application
+Run `make run-linux` to run the linux application
+Run `make wasm` to build the wasm application
+Run `make run-wasm` to run the wasm application
+Run `make android` to build the android application
+Run `make dist` to package linux/wasm/android in the dist dir
 
 # Windows
+https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe
 
-TODO
-
-# MacOS
-
-TODO
-
-# Android
-
-TODO
-
-# IOS
-
-TODO
-
-# WASM
-
-## Requirements
-Install qt with wasm single threaded as target with the installer.
-Set QMAKEWASM variable in Makefile to the install location.
-Find out the version of emsdk to install by building for wasm.
-for qt 6.5 emsdk version 3.1.25 is required
-Install emsdk as followed.
-```
-cd $PACKAGEDIR
-git clone https://github.com/emscripten-core/emsdk.git
-cd emsdk
-./emsdk install 3.1.25
-./emsdk activate 3.1.25
-```
-
-## Building
-Run `make wasm`.
-
-## Running
-Run `emrun build/wasm/PROJECT_NAME.html`.
-
-## Deploying
-Run `make dist`
-This will put the required files to deploy in dist/wasm
+# MacOs
+https://download.qt.io/official_releases/online_installers/qt-unified-mac-x64-online.dmg
 
 # TODOS
 A github action is desired to automate the setup and build process.
-	see https://github.com/marketplace/actions/install-qt for action to install qt.
-		this needs some work because it doesn't support building wasm which is one of the end goes of this project
