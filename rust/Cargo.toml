@@ -1,0 +1,17 @@
+[package]
+name = "qt6-skeleton"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cxx = "1.0.95"
+cxx-qt = { path = "libs/cxx-qt/crates/cxx-qt" }
+cxx-qt-lib = { path = "libs/cxx-qt/crates/cxx-qt-lib" }
+
+[build-dependencies]
+cxx-qt-build = { path = "libs/cxx-qt/crates/cxx-qt-build" }

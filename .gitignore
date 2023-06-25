@@ -1,3 +1,6 @@
 build/
 dist/
 packages/
+
+src/plugins.cc
+rust/target

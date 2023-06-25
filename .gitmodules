@@ -1,0 +1,3 @@
+[submodule "rust/libs/cxx-qt"]
+	path = rust/libs/cxx-qt
+	url = git@github.com:jimmyvanhest/cxx-qt.git
