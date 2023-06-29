@@ -13,10 +13,9 @@ ANDROID_NDK_ROOT=$(PACKAGEDIR)/Android/ndk/23.1.7779620
 export ANDROID_NDK_ROOT
 
 # project variables
-# TODO get from rust project
-PROJECT_NAME=qt6-skeleton
+PROJECT_NAME=$(shell toml get -r rust/Cargo.toml package.name)
 export PROJECT_NAME
-VERSION=1.0
+VERSION=$(shell toml get -r rust/Cargo.toml package.version)
 export VERSION
 
 # debian package variables
@@ -97,29 +96,10 @@ dev-uninstall:
 	sudo apt autoremove -y
 	rm -rf $(PACKAGEDIR)
 
-rust/target/release/lib$(subst -,_,${PROJECT_NAME}).a: export QMAKE = $(QMAKELINUX)
-rust/target/release/lib$(subst -,_,${PROJECT_NAME}).a: FORCE $(PACKAGEDIR)/Qt
-	cd rust && cargo b --release
-src/plugins.cc: rust/target/release/lib$(subst -,_,${PROJECT_NAME}).a scripts/generate_q_static_plugin_import.sh
-	scripts/generate_q_static_plugin_import.sh
-
-rust/target/wasm32-unknown-emscripten/release/lib$(subst -,_,${PROJECT_NAME}).a: export QMAKE = $(QMAKEWASM)
-rust/target/wasm32-unknown-emscripten/release/lib$(subst -,_,${PROJECT_NAME}).a: FORCE $(PACKAGEDIR)/Qt
-	source $(PACKAGEDIR)/emsdk/emsdk_env.sh && cd rust && cargo b --release --target wasm32-unknown-emscripten
-
-rust/target/armv7-linux-androideabi/release/lib$(subst -,_,${PROJECT_NAME}).a: export QMAKE = $(QMAKEANDROID)
-rust/target/armv7-linux-androideabi/release/lib$(subst -,_,${PROJECT_NAME}).a: export CXX = $(PWD)/packages/Android/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++
-rust/target/armv7-linux-androideabi/release/lib$(subst -,_,${PROJECT_NAME}).a: export CXXFLAGS = -target armv7a-linux-androideabi23 -fno-limit-debug-info -fPIC -fstack-protector-strong -DANDROID -O2 -mthumb -Oz -std=gnu++1z -Wall -W -D_REENTRANT -fPIC -DQT_NO_DEBUG -DQT_QUICK_LIB -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_QMLMODELS_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
-rust/target/armv7-linux-androideabi/release/lib$(subst -,_,${PROJECT_NAME}).a: export AR = $(PWD)/packages/Android/ndk/23.1.7779620/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar
-rust/target/armv7-linux-androideabi/release/lib$(subst -,_,${PROJECT_NAME}).a: FORCE $(PACKAGEDIR)/Qt
-	cd rust && RUST_BACKTRACE=full cargo b --release --target armv7-linux-androideabi
-
-
 build/linux: export QMAKE = $(QMAKELINUX)
 build/linux: export BUILDDIR = build/linux
-build/linux: $(PACKAGEDIR)/Qt scripts/qmake-build.sh src/plugins.cc
+build/linux: $(PACKAGEDIR)/Qt scripts/qmake-build.sh
 	scripts/qmake-build.sh
-build/linux/$(PROJECT_NAME): rust/target/release/lib$(subst -,_,${PROJECT_NAME}).a
 build/linux/$(PROJECT_NAME): FORCE build/linux
 	$(MAKE) -C build/linux
 .PHONY: linux
@@ -138,11 +118,10 @@ build/wasm: export QMAKE = $(QMAKEWASM)
 build/wasm: export BUILDDIR = build/wasm
 build/wasm: export SOURCE = $(PACKAGEDIR)/emsdk/emsdk_env.sh
 build/wasm: export RUSTTARGET = wasm32-unknown-emscripten
-build/wasm: $(PACKAGEDIR)/Qt $(PACKAGEDIR)/emsdk scripts/qmake-build.sh src/plugins.cc
+build/wasm: $(PACKAGEDIR)/Qt $(PACKAGEDIR)/emsdk scripts/qmake-build.sh
 	scripts/qmake-build.sh
 build/wasm/qtlogo.svg: FORCE logo.svg build/wasm
 	rsync -ct logo.svg build/wasm/qtlogo.svg
-build/wasm/$(PROJECT_NAME).html: rust/target/wasm32-unknown-emscripten/release/lib$(subst -,_,${PROJECT_NAME}).a
 build/wasm/$(PROJECT_NAME).html: FORCE build/wasm
 	source $(PACKAGEDIR)/emsdk/emsdk_env.sh && $(MAKE) -C build/wasm
 .PHONY: wasm
@@ -163,9 +142,8 @@ dist/wasm/$(PROJECT_NAME).tar.gz: build/wasm/$(PROJECT_NAME).html build/wasm/qtl
 build/android: export QMAKE = $(QMAKEANDROID)
 build/android: export BUILDDIR = build/android
 build/android: export RUSTTARGET = armv7-linux-androideabi
-build/android: $(PACKAGEDIR)/Qt $(ANDROID_SDK_ROOT) scripts/qmake-build.sh src/plugins.cc
+build/android: $(PACKAGEDIR)/Qt $(ANDROID_SDK_ROOT) scripts/qmake-build.sh
 	scripts/qmake-build.sh
-build/android/android-build/$(PROJECT_NAME).apk: rust/target/armv7-linux-androideabi/release/lib$(subst -,_,${PROJECT_NAME}).a
 build/android/android-build/$(PROJECT_NAME).apk: FORCE build/android
 	$(MAKE) -C build/android aab
 .PHONY: android
@@ -190,5 +168,5 @@ dist: dist/android/$(PROJECT_NAME).apk
 
 .PHONY: clean
 clean:
-	rm -rf build dist src/plugins.cc
+	rm -rf build dist
 	cd rust && cargo clean
