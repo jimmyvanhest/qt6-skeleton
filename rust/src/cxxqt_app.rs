@@ -1,19 +1,19 @@
 #[cxx_qt::bridge]
 pub mod app {
-	unsafe extern "C++" {
+    unsafe extern "C++" {
         include!("cxx-qt-lib/qstring.h");
         type QString = cxx_qt_lib::QString;
     }
 
-	#[cxx_qt::qobject(qml_uri = "App", qml_version = "1.0")]
-	pub struct App {
+    #[cxx_qt::qobject(qml_uri = "App", qml_version = "1.0")]
+    pub struct App {
         #[qproperty]
         number: i32,
         #[qproperty]
         string: QString,
-	}
+    }
 
-	impl Default for App {
+    impl Default for App {
         fn default() -> Self {
             Self {
                 number: 0,
@@ -21,8 +21,8 @@ pub mod app {
             }
         }
     }
-	
-	impl qobject::App {
+    
+    impl qobject::App {
         #[qinvokable]
         pub fn increment_number(self: Pin<&mut Self>) {
             let previous = *self.as_ref().number();
