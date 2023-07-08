@@ -14,4 +14,4 @@ cxx-qt = { path = "libs/cxx-qt/crates/cxx-qt" }
 cxx-qt-lib = { path = "libs/cxx-qt/crates/cxx-qt-lib" }
 
 [build-dependencies]
-cxx-qt-build = { path = "libs/cxx-qt/crates/cxx-qt-build" }
+cxx-qt-build = { path = "libs/cxx-qt/crates/cxx-qt-build", features = [ "link_qt_external" ] }
