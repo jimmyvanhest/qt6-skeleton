@@ -21,7 +21,7 @@ pub mod app {
             }
         }
     }
-    
+
     impl qobject::App {
         #[qinvokable]
         pub fn increment_number(self: Pin<&mut Self>) {

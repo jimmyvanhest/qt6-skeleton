@@ -18,7 +18,7 @@ echo "QT += qml quick" >> $BUILDDIR/$PROJECT_NAME.pro
 # add the static rust library as target
 echo "rustlib.target = $(pwd)/rust/target/${RUSTTARGET}/release/lib${PROJECT_NAME/"-"/"_"}.a" >> $BUILDDIR/$PROJECT_NAME.pro;
 if [ -z "${RUSTTARGET}" ]; then
-    echo "rustlib.commands = cd ../../rust && cargo b --release -vv" >> $BUILDDIR/$PROJECT_NAME.pro;
+    echo "rustlib.commands = cd ../../rust && cargo b --release" >> $BUILDDIR/$PROJECT_NAME.pro;
 else
     echo "rustlib.commands = cd ../../rust && cargo b --release --target ${RUSTTARGET}" >> $BUILDDIR/$PROJECT_NAME.pro;
 fi
